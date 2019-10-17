@@ -146,3 +146,11 @@ with tf.Session() as sess:
     #最后保存会话
     saver.save(sess,saveFile)
                                    
+#GPU显存不够时，将整个测试数据拆分成多个小的batch进行测试
+          mean_value = 0.0
+          for i in range(mnist.test.labels.shape[0]):
+                batch = mnist.test.next_batch(50)
+                train_accuracy = sess.run(accuracy,feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
+                mean_value += train_accuracy
+          print("test accuracy %g" % (mean_value/mnist.test.labels.shape[0])
+          
