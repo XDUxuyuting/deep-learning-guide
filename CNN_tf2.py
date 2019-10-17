@@ -116,3 +116,33 @@ trian_step = tf.trian.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction,tf.float32))
 
+#保存训练结果
+savePath = './mnist_conv/'
+saveFile = savePath + 'mnist_conv.ckpt'
+if os.path.exists(savePath) == False:
+    os.mkdir(savePath)
+
+saver = tf.train.Saver()
+....
+saver.save(sess, saveFile)
+
+#开始训练
+with tf.Session() as sess:
+    #初始化所有变量
+    sess.run(tf.global_variables_initializer())
+    for i in range(20000):
+        #每次获取50张图片数据和对应的标签
+        batch = mnist.train.next_batch(50)
+        if i % 100 == 0:
+            trian_accuracy = sess.run(accuracy, feed_dict={x:batch[0],y_:batch[1],keep_prob:1.0})
+            print("step %d,training accuracy %g",%(i,train_accuracy))
+        #这里是真的训练，将数据传入
+        sess.run(train_step,feed_dict={x:batch[0],y_:batch[1],keep_prob:0.5})
+
+    #训练结束后，使用测试集测试最后的准确率
+    print("test accuracy %g" % sess.run(accuracy,feed_dict={x:mnist.test.images,
+                                                            y_:mnist.test.labels,keep_prob:1.0})
+        
+    #最后保存会话
+    saver.save(sess,saveFile)
+                                   
