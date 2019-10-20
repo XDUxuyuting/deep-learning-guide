@@ -84,6 +84,9 @@ for j in range(10000):
     c_int = a_int - b_int
     c = int2binary[c_int ]
 
+    #存储神经网络的预测值的二进制形式
+    d = np.zeros_like(c)
+
     #定义用来存储循环体输出层的误差倒数和隐藏层的值的list
     #存储每个循环体输出层的误差倒数
     layer_output_deltas = list()
@@ -125,7 +128,7 @@ for j in range(10000):
         over_all_error += np.abs(layer_output_error[0])
 
         #保存预测bit位，这里对预测值进行四舍五入，保存的值要么是0,要么是1
-        d[binary_dim - position -1] = np.round(layer_ouput[0][0])
+        d[binary_dim - position -1] = np.round(layer_output[0][0])
 
         #保存本次循环体的隐藏层，供下个循环体使用
         layer_hidden_values.append(copy.deepcopy(layer_hidden))
@@ -160,7 +163,7 @@ for j in range(10000):
         w_input_hidden += w_input_hidden_update * learning_rate
         w_hidden_output += w_hidden_output_update * learning_rate
         w_hidden += w_hidden_update * learning_rate
-        w_input_hidden_update * = 0
+        w_input_hidden_update *= 0
         w_hidden_update *= 0
         w_hidden_update *= 0
 
@@ -177,5 +180,7 @@ for j in range(10000):
             print (str(a_int) + " - " + str(b_int) + " = " + str(out))
             print ("-------------")
     
+        
+
         
 
