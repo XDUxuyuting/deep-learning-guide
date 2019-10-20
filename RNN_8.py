@@ -143,7 +143,7 @@ for j in range(10000):
             X = np.array([[a[position], b[position]]])
 
             #当前循环体的隐藏层、
-            layer_hidden = layer_hidden_values[-position - 1]
+            layer_hidden = layer_hidden_values[-position -1]
 
             #上一个循环体的隐藏层
             prev_layer_hidden = layer_hidden_values[-position -2]
@@ -153,6 +153,10 @@ for j in range(10000):
 
             #计算当前隐藏层的误差
             #通过后一个循环体（因为是反向传播）的隐藏层数和当前循环体的输出层误差，计算当前循环体的隐藏层误差
+            layer_hidden_delta = (future_layer_hidden_delta.dot(w_hidden.T)+
+                                  layer_output_delta.dot(w_hidden_output.T)) * sigmoid_output_to_derivative(layer_hidden)
+            
+            #等到完成了所有的反向传播误差计算，才会更新权重矩阵，先暂时把更新矩阵存起来
             w_input_hidden_update += X.T.dot(layer_hidden_delta)
             w_hidden_output_update += np.atleast_2d(layer_hidden).T.dot(layer_output_delta)
             w_hidden_update += np.atleast_2d(prev_layer_hidden).T.dot(layer_hidden_delta)
@@ -181,6 +185,3 @@ for j in range(10000):
             print ("-------------")
     
         
-
-        
-
